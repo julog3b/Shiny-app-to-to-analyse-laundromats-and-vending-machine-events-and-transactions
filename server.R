@@ -33,86 +33,86 @@ shinyServer(function(input, output) {
     # --------------------------------------------------------------------------
     #
     #---------------------------------------------------------------------------
-    #start_date = input$daterange[1] - hours(13)
-    #end_date = input$daterange[2] + hours(11)
+    start_date = input$daterange[1] - hours(13)
+    end_date = input$daterange[2] + hours(11)
     
     # Get the user's local timezone
-#     local_tz <- Sys.timezone()
-#     
-#     start_date <- as.character(with_tz(ymd(input$daterange[1]), local_tz))
-#     end_date <- as.character(with_tz(ymd(input$daterange[2]), local_tz))
-#     
-#     
-# 
-# 
-# 
-#     con <- dbConnect(
-#       bigrquery::bigquery(),
-#       project = "payments-cloud-test",
-#       dataset = "live_vending_data_snapshot_20230202",
-#       billing = "payments-cloud-test")
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-#     sql <- "SELECT DISTINCT
-# transaction_datetime,
-# (SELECT t0.value FROM UNNEST (tags) AS t0 WHERE t0.key = 'siteName') as siteName,
-# (SELECT t1.value FROM UNNEST (tags) AS t1 WHERE t1.key = 'machineId')
-# as machineId,
-# (SELECT t2.value FROM UNNEST (tags) AS t2 WHERE t2.key = 'siteId') as siteId,
-# (SELECT t3.value FROM UNNEST (tags) AS t3 WHERE t3.key = 'contractName')
-# as contractName,
-# (SELECT items[SAFE_OFFSET(0)].appliance_name) as appliance_name,
-# (total_cost_cents/100)	as total_cost_dollars,
-# cell_provider				,
-# modem_model				,
-# card_type	,
-# dex_ok		,
-# total_qty	,
-# vmc_serial_number			,
-# transaction_number		,
-# gateway_serial_number			,
-# terminal_result_string		,
-# cell_ip_address			,
-# terminal_result_code,
-# vmc_manufacturer		,
-# terminal_transaction_type		,
-# terminal_id,
-# 
-# card_number		,
-# vmc_model			,
-# receipt				,
-# gateway_mac_address				,
-# sim_number				,
-# gateway_software_version	,
-# modem_imei			,
-# vend_result			,
-# credit_amount_cents		,
-# credit_authorized_by		,
-# credit_reason,
-# 
-# 
-# 
-# FROM `payments-cloud-test.live_vending_data_snapshot_20230202.transaction`
-# WHERE
-# terminal_transaction_type in ('purchase')
-# and
-# transaction_datetime BETWEEN 'DATE1' AND 'DATE2'
-# 
-# ORDER BY transaction_datetime DESC"
-# 
-# 
-# 
-# 
-#     sql <- sub("DATE1", start_date,sql);
-#     sql <- sub("DATE2", end_date,sql)
-# 
-#     transactions <- strings2factors(dbGetQuery(con, sql))
-# 
+     local_tz <- Sys.timezone()
+     
+     start_date <- as.character(with_tz(ymd(input$daterange[1]), local_tz))
+     end_date <- as.character(with_tz(ymd(input$daterange[2]), local_tz))
+     
+     
+ 
+ 
+ 
+     con <- dbConnect(
+       bigrquery::bigquery(),
+       project = "payments-cloud-test",
+       dataset = "live_vending_data_snapshot_20230202",
+       billing = "payments-cloud-test")
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+     sql <- "SELECT DISTINCT
+ transaction_datetime,
+ (SELECT t0.value FROM UNNEST (tags) AS t0 WHERE t0.key = 'siteName') as siteName,
+ (SELECT t1.value FROM UNNEST (tags) AS t1 WHERE t1.key = 'machineId')
+ as machineId,
+ (SELECT t2.value FROM UNNEST (tags) AS t2 WHERE t2.key = 'siteId') as siteId,
+ (SELECT t3.value FROM UNNEST (tags) AS t3 WHERE t3.key = 'contractName')
+ as contractName,
+ (SELECT items[SAFE_OFFSET(0)].appliance_name) as appliance_name,
+ (total_cost_cents/100)	as total_cost_dollars,
+ cell_provider				,
+ modem_model				,
+ card_type	,
+ dex_ok		,
+ total_qty	,
+ vmc_serial_number			,
+ transaction_number		,
+ gateway_serial_number			,
+ terminal_result_string		,
+ cell_ip_address			,
+ terminal_result_code,
+ vmc_manufacturer		,
+ terminal_transaction_type		,
+ terminal_id,
+ 
+ card_number		,
+ vmc_model			,
+ receipt				,
+ gateway_mac_address				,
+ sim_number				,
+ gateway_software_version	,
+ modem_imei			,
+ vend_result			,
+ credit_amount_cents		,
+ credit_authorized_by		,
+ credit_reason,
+ 
+ 
+ 
+ FROM `payments-cloud-test.live_vending_data_snapshot_20230202.transaction`
+ WHERE
+ terminal_transaction_type in ('purchase')
+ and
+ transaction_datetime BETWEEN 'DATE1' AND 'DATE2'
+ 
+ ORDER BY transaction_datetime DESC"
+ 
+ 
+ 
+ 
+     sql <- sub("DATE1", start_date,sql);
+     sql <- sub("DATE2", end_date,sql)
+ 
+     transactions <- strings2factors(dbGetQuery(con, sql))
+ 
 
     # --------------------------------------------------------------------------
     removeNotification(id = "Loading")
